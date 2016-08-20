@@ -1,9 +1,3 @@
-#define _disable_ld_no_undefined 1
-
-%define _privatelibs libcore[.]so.* libso[.]so.*
-%define __provides_exclude ^(%{_privatelibs})$
-%define __requires_exclude ^(%{_privatelibs})$
-
 %define sname pwsafe
 
 Summary:	A cross-platform password database utility
@@ -17,7 +11,8 @@ Source0:	https://downloads.sourceforge.net/passwordsafe/%{sname}-%{version}BETA-
 #Source0:	https://github.com/pwsafe/%{sname}/releases/download/%{version}BETA/%{sname}-%{version}BETA-src.tgz
 Source1:	https://downloads.sourceforge.net/passwordsafe/%{sname}-%{version}BETA-src.tgz.sig
 #Source1:	https://github.com/pwsafe/%{sname}/releases/download/%{version}BETA/%{sname}-%{version}BETA-src.tgz.sig
-Patch0:		%{name}-0.99-test_missing_link.patch
+Patch0:		%{name}-0.99-static_libs.patch
+Patch1:		%{name}-0.99-test_missing_link.patch
 
 BuildRequires:	cmake
 BuildRequires:	gtest-devel
@@ -40,7 +35,6 @@ you use.
 
 %files -f %{name}.lang
 %{_bindir}/%{sname}
-%{_libdir}/*so
 %{_datadir}/%{sname}/
 %{_datadir}/applications/%{sname}.desktop
 %{_datadir}/pixmaps/%{sname}.xpm
@@ -64,7 +58,8 @@ you use.
 %setup -q -n %{sname}-%{version}BETA
 
 # apply all patches
-%patch0 -p1 -b .orig
+%patch0 -p1 -b .static
+%patch1 -p1 -b .link
 
 %build
 %cmake
@@ -73,15 +68,10 @@ you use.
 %install
 %make_install -C build
 
-# libs
-%__install -dm 0755 %{buildroot}%{_libdir}/
-%__install -pm 0755 build/src/core/libcore.so %{buildroot}%{_libdir}/
-%__install -pm 0755 build/src/os/libos.so %{buildroot}%{_libdir}/
-
 # .desktop file
 %__install -dm 755 %{buildroot}%{_datadir}/applications/
 %__mv %{buildroot}%{_datadir}/%{sname}/%{sname}.desktop \
-			 %{buildroot}%{_datadir}/applications/%{sname}.desktop
+	%{buildroot}%{_datadir}/applications/%{sname}.desktop
 
 # icons
 for dim in 16x16 32x32 48x48 64x64 72x72 128x128
