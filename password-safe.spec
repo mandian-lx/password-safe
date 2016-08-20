@@ -7,9 +7,9 @@ Release:	1
 License:	Artistic
 Group:		File tools
 URL:		https://pwsafe.org/
-Source0:	https://downloads.sourceforge.net/passwordsafe/%{sname}-%{version}BETA-src.tgz
+Source0:	%{sname}-%{version}BETA-src.tgz
 #Source0:	https://github.com/pwsafe/%{sname}/releases/download/%{version}BETA/%{sname}-%{version}BETA-src.tgz
-Source1:	https://downloads.sourceforge.net/passwordsafe/%{sname}-%{version}BETA-src.tgz.sig
+Source1:	%{sname}-%{version}BETA-src.tgz.sig
 #Source1:	https://github.com/pwsafe/%{sname}/releases/download/%{version}BETA/%{sname}-%{version}BETA-src.tgz.sig
 Patch0:		%{name}-0.99-static_libs.patch
 Patch1:		%{name}-0.99-test_missing_link.patch
