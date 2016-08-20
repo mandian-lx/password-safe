@@ -23,10 +23,10 @@ BuildRequires:	cmake
 BuildRequires:	gtest-devel
 BuildRequires:	imagemagick
 BuildRequires:	libyubikey-devel
-BuildRequires:	xerces-c-devel
 BuildRequires:	wxgtku3.0-devel
 BuildRequires:	zip
 BuildRequires:	pkgconfig(uuid)
+BuildRequires:	pkgconfig(xerces-c)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(ykpers-1)
