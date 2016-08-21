@@ -61,6 +61,9 @@ you use.
 %patch0 -p1 -b .static
 %patch1 -p1 -b .link
 
+# fix help dir path
+%__sed -i -e 's|/usr/share/doc/password-safe/help/|%{_docdir}/%{name}/help/|' src/os/unix/dir.cpp
+
 %build
 %cmake
 %make
