@@ -39,6 +39,7 @@ you use.
 %{_datadir}/applications/%{sname}.desktop
 %{_datadir}/pixmaps/%{sname}.xpm
 %{_iconsdir}/hicolor/*/apps/%{sname}.png
+%{_docdir}/%{sname}/help/
 %{_mandir}/man1/%{sname}.1*
 %docdir docs/help
 %doc README.txt
@@ -61,8 +62,13 @@ you use.
 %patch0 -p1 -b .static
 %patch1 -p1 -b .link
 
-# fix help dir path
-%__sed -i -e 's|/usr/share/doc/password-safe/help/|%{_docdir}/%{name}/help/|' src/os/unix/dir.cpp
+# fix path
+%__sed -i -e '{  s|/usr/share/doc/password-safe/help/|%{_docdir}/%{sname}/help/|
+		 s|/usr/share/pwsafe/xml/|%{_datadir}/%{sname}/xml/|
+	      }' src/os/unix/dir.cpp
+%__sed -i -e '{  s|share/doc/passwordsafe|share/doc/%{sname}|
+		 s|share/pwsafe|share/%{sname}|
+	      }' CMakeLists.txt
 
 %build
 %cmake
@@ -77,11 +83,11 @@ you use.
 	%{buildroot}%{_datadir}/applications/%{sname}.desktop
 
 # icons
-for dim in 16x16 32x32 48x48 64x64 72x72 128x128
+for d in 16 32 48 64 72 128 256
 do
-	%__install -dm 755 %{buildroot}%{_iconsdir}/hicolor/"$dim"/apps/
+	%__install -dm 755 %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/
 	convert -background none install/graphics/%{sname}.png \
-		-scale "$dim" %{buildroot}%{_iconsdir}/hicolor/"$dim"/apps/%{sname}.png
+		-scale ${d}x${d} %{buildroot}%{_iconsdir}/hicolor/${d}x${d}/apps/%{sname}.png
 done
 %__install -dm 755 %{buildroot}%{_datadir}/pixmaps/
 convert -background none install/graphics/%{sname}.png \
@@ -91,11 +97,11 @@ convert -background none install/graphics/%{sname}.png \
 %find_lang %{name} --all-name
 
 # help
-%__install -dm 0755 %{buildroot}%{_docdir}/%{name}/help/
-%__install -pm 0644 build/help/help*zip %{buildroot}%{_docdir}/%{name}/help/
+%__install -dm 0755 %{buildroot}%{_docdir}/%{sname}/help/
+%__install -pm 0644 build/help/help*zip %{buildroot}%{_docdir}/%{sname}/help/
 
 # we are not Debian
-%__rm -fr %{buildroot}%{_docdir}/passwordsafe
+%__rm -fr %{buildroot}%{_docdir}/%{sname}/{changelog.Debian,copyright}
 
 %check
 # desktop file
